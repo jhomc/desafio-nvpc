@@ -1,5 +1,7 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.h1`
-  color: red;
+  ${({theme}) => css`
+    color: ${theme.colors.secondary}
+  `}
 `
