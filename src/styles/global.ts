@@ -1,7 +1,7 @@
-import { Theme } from './../../styled-components.d';
-import { createGlobalStyle, css } from 'styled-components'
+import { Theme } from "./../../styled-components.d";
+import { createGlobalStyle, css } from "styled-components";
 
-const GlobalStyles = createGlobalStyle<{theme: Theme}>`
+const GlobalStyles = createGlobalStyle<{ theme: Theme }>`
   /* poppins-300 - latin */
   @font-face {
     font-family: 'Poppins';
@@ -46,8 +46,9 @@ const GlobalStyles = createGlobalStyle<{theme: Theme}>`
 
     body {
       font-family: ${theme.font.family};
+      background-color: ${theme.colors.mainBg};
     }
   `}
-`
+`;
 
-export default GlobalStyles
+export default GlobalStyles;
