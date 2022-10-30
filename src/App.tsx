@@ -15,6 +15,9 @@ export interface Repository {
   html_url: string;
   language: string;
   pushed_at: string;
+  archived: boolean;
+  allow_forking: boolean;
+  has_pages: boolean;
 }
 
 function App() {
@@ -67,6 +70,13 @@ function App() {
         newList = repositoryList.filter((repository) => {
           return repository.name.toLowerCase().includes(text.toLowerCase());
         });
+      } else {
+        newList = repositoryList.filter((repository) => {
+          return (
+            repository.language == tech &&
+            repository.name.toLowerCase().includes(text.toLowerCase())
+          );
+        });
       }
     } else {
       newList = repositoryList.filter((repository) => {
@@ -77,8 +87,28 @@ function App() {
         }
       });
     }
-    console.log(repositoryList);
-    console.log(newList);
+    setFilteredList(newList);
+  }
+
+  function searchByType(type: string, tech: string, text: string) {
+    let newList: Repository[] = [];
+
+    newList = repositoryList.filter((repository) => {
+      switch (type) {
+        case "all":
+          return repository;
+        case "archived":
+          return repository.archived;
+        case "fork":
+          return repository.allow_forking;
+        case "hasPage":
+          console.log("oi");
+          return repository.has_pages;
+        default:
+          return;
+      }
+    });
+
     setFilteredList(newList);
   }
 
@@ -109,6 +139,7 @@ function App() {
         technologies={technologies}
         searchByTechnology={searchByTechnology}
         orderRepositoryList={orderRepositoryList}
+        searchByType={searchByType}
       />
       <RepositoryList repositoryList={filteredList} />
     </ThemeProvider>

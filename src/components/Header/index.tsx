@@ -4,7 +4,7 @@ export function Header() {
   return (
     <S.Wrapper>
       <S.HeaderTitle>
-        Welcome to <span>Jhonata's </span>repository list
+        Bem vindo à lista de repositórios de <span>Jhonata M. Costa </span>
       </S.HeaderTitle>
     </S.Wrapper>
   );

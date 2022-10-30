@@ -5,6 +5,7 @@ interface FilterFieldsProps {
   searchRepoBytext: (tech: string, text: string) => void;
   searchByTechnology: (tech: string, text: string) => void;
   orderRepositoryList: (order: string) => void;
+  searchByType: (type: string, tech: string, text: string) => void;
   technologies: string[];
 }
 
@@ -12,6 +13,7 @@ export function FilterFields({
   searchRepoBytext,
   searchByTechnology,
   orderRepositoryList,
+  searchByType,
   technologies,
 }: FilterFieldsProps) {
   const [textValue, setTextValue] = useState("");
@@ -28,8 +30,15 @@ export function FilterFields({
     setTechValue(tech);
   }
 
+  function handleSearchByType(type: string) {
+    searchByType(type, techValue, textValue);
+  }
+
   function handleOrderList(order: string) {
     orderRepositoryList(order);
+
+    setTechValue("");
+    setTextValue("");
   }
   return (
     <S.Wrapper>
@@ -50,7 +59,7 @@ export function FilterFields({
           <S.SearchOption value="tecnologies" disabled hidden>
             Tecnologias
           </S.SearchOption>
-          <S.SearchOption value="all">Todas</S.SearchOption>
+          <S.SearchOption value="all">Todas as tecnologias</S.SearchOption>
           {technologies.map((tech) => {
             return (
               <S.SearchOption key={tech} value={tech}>
@@ -62,14 +71,15 @@ export function FilterFields({
         <S.SearchBox
           defaultValue="type"
           placeholder="Tipo"
-          onChange={(event) => handleSearchByTech(event.target.value)}
+          onChange={(event) => handleSearchByType(event.target.value)}
         >
           <S.SearchOption value="type" disabled hidden>
             Tipo
           </S.SearchOption>
-          <S.SearchOption>Arquivado</S.SearchOption>
-          <S.SearchOption>Permite Fork</S.SearchOption>
-          <S.SearchOption>Publicados</S.SearchOption>
+          <S.SearchOption value="all">Todos os tipos</S.SearchOption>
+          <S.SearchOption value="archived">Arquivado</S.SearchOption>
+          <S.SearchOption value="fork">Permite Fork</S.SearchOption>
+          <S.SearchOption value="hasPage">Publicados</S.SearchOption>
         </S.SearchBox>
         <S.SearchBox
           defaultValue="order"

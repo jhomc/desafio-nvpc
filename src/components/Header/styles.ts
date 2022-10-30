@@ -16,5 +16,9 @@ export const HeaderTitle = styled.h1`
   ${({ theme }) => css`
     color: ${theme.colors.white};
     font-size: ${theme.font.sizes.xxlarge};
+
+    span {
+      color: ${theme.colors.mainBg};
+    }
   `}
 `;
