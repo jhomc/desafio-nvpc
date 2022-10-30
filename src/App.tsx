@@ -24,28 +24,22 @@ function App() {
   const [technologies, setTechnologies] = useState<string[]>([]);
 
   useEffect(() => {
-    api
-      .get("/repos?per_page=100", {
-        headers: {
-          Authorization: `Bearer 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`,
-        },
-      })
-      .then((response) => {
-        setRepositoryList(response.data);
-        setFilteredList(response.data);
-        console.log(response.data);
+    api.get("/repos?per_page=100").then((response) => {
+      setRepositoryList(response.data);
+      setFilteredList(response.data);
+      console.log(response.data);
 
-        let allTechs: string[] = [];
-        response.data.forEach((repository: Repository) => {
-          if (
-            allTechs.indexOf(repository.language) == -1 &&
-            repository.language != null
-          ) {
-            allTechs.push(repository.language);
-          }
-        });
-        setTechnologies(allTechs);
+      let allTechs: string[] = [];
+      response.data.forEach((repository: Repository) => {
+        if (
+          allTechs.indexOf(repository.language) == -1 &&
+          repository.language != null
+        ) {
+          allTechs.push(repository.language);
+        }
       });
+      setTechnologies(allTechs);
+    });
   }, []);
 
   // useEffect(() => {
