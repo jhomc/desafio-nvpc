@@ -1,29 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Repository } from "../../App";
 import { api } from "../../services/api";
 import { RepositoryItem } from "../RepositoryItem";
 import * as S from "./styles";
 
-interface Repository {
-  id: number;
-  name: string;
-  description: string;
-  html_url: string;
-  language: string;
-  pushed_at: string;
+export interface RepositoryListProps {
+  repositoryList: Repository[];
 }
 
-export function RepositoryList() {
-  const [respositoryList, setRepositoryList] = useState<Repository[]>([]);
-  useEffect(() => {
-    api.get("/repos?per_page=100").then((response) => {
-      setRepositoryList(response.data);
-      console.log(response.data);
-    });
-  }, []);
+export function RepositoryList({ repositoryList }: RepositoryListProps) {
   return (
     <S.Wrapper>
-      {respositoryList.map((repository) => {
+      {repositoryList.map((repository) => {
         return <RepositoryItem key={repository.id} repository={repository} />;
       })}
     </S.Wrapper>

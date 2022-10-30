@@ -8,17 +8,13 @@ export const Wrapper = styled.div`
     background-color: ${theme.colors.white};
     width: 100%;
     height: 20rem;
+    background-image: linear-gradient(180deg, #ff5f5f 0%, #f062c0 50%);
   `}
 `;
 
 export const HeaderTitle = styled.h1`
   ${({ theme }) => css`
-    color: ${theme.colors.black};
+    color: ${theme.colors.white};
     font-size: ${theme.font.sizes.xxlarge};
-    span {
-      background-image: linear-gradient(90deg, #ff5f5f 0%, #f062c0 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
   `}
 `;

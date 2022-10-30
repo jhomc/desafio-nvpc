@@ -26,12 +26,13 @@ export const RepositoryContent = styled.div`
     margin-top: ${theme.spacings.small};
   `}
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 `;
 
 export const RepositoryDescription = styled.p`
   ${({ theme }) => css`
+    max-width: 40rem;
     font-size: ${theme.font.sizes.medium};
     font-weight: ${theme.font.normal};
   `}

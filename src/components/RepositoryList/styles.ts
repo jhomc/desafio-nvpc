@@ -7,5 +7,6 @@ export const Wrapper = styled.section`
     margin: 0 auto;
     max-width: 740px;
     padding: 0 ${theme.spacings.large};
+    margin-top: ${theme.spacings.xlarge};
   `}
 `;
