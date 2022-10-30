@@ -12,6 +12,23 @@ export const Wrapper = styled.div`
   margin: 0 auto;
 `;
 
+export const FiltersContainer = styled.div`
+  ${({ theme }) => css`
+    margin-top: ${theme.spacings.medium};
+    border-bottom: 1px solid ${theme.colors.primary};
+
+    span {
+      color: ${theme.colors.white};
+      font-family: ${theme.font.family};
+      font-size: ${theme.font.sizes.small};
+      align-self: center;
+    }
+  `}
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`;
+
 export const SearchByTextInput = styled.input`
   ${({ theme }) => css`
     border: 1px solid ${theme.colors.mainBg};
@@ -27,9 +44,7 @@ export const SearchByTextInput = styled.input`
   margin-top: -2.7rem;
 `;
 
-export const SearchByDate = styled.button``;
-
-export const SearchByTechnology = styled.select`
+export const SearchBox = styled.select`
   ${({ theme }) => css`
     height: 2.8rem;
     background: transparent;
@@ -39,9 +54,11 @@ export const SearchByTechnology = styled.select`
     font-weight: ${theme.font.bold};
   `}
 `;
-export const TechOption = styled.option`
+export const SearchOption = styled.option`
   ${({ theme }) => css`
     font-family: ${theme.font.family};
     color: ${theme.colors.black};
   `}
 `;
+
+export const ListOrder = styled.select``;

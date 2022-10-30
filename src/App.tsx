@@ -27,7 +27,6 @@ function App() {
     api.get("/repos?per_page=100").then((response) => {
       setRepositoryList(response.data);
       setFilteredList(response.data);
-      console.log(response.data);
 
       let allTechs: string[] = [];
       response.data.forEach((repository: Repository) => {
@@ -42,23 +41,10 @@ function App() {
     });
   }, []);
 
-  // useEffect(() => {
-  //   let allTechs: string[] = [];
-  //   filteredList.forEach((repository: Repository) => {
-  //     if (
-  //       allTechs.indexOf(repository.language) == -1 &&
-  //       repository.language != null
-  //     ) {
-  //       allTechs.push(repository.language);
-  //     }
-  //   });
-  //   setTechnologies(allTechs);
-  // }, [filteredList]);
-
   function searchRepoBytext(text: string, tech: string) {
     let newList: Repository[] = [];
 
-    if (tech != "all") {
+    if (tech != "all" && tech) {
       newList = repositoryList.filter((repository) => {
         return (
           repository.name.toLowerCase().includes(text.toLowerCase()) &&
@@ -73,16 +59,45 @@ function App() {
     setFilteredList(newList);
   }
 
-  function searchByTechnology(tech: string) {
-    let newList = repositoryList.filter((repository) => {
-      if (tech == "all") {
-        return repository;
-      } else {
-        return repository.language == tech;
-      }
-    });
+  function searchByTechnology(tech: string, text: string) {
+    let newList: Repository[] = [];
 
+    if (text != "") {
+      if (tech == "all") {
+        newList = repositoryList.filter((repository) => {
+          return repository.name.toLowerCase().includes(text.toLowerCase());
+        });
+      }
+    } else {
+      newList = repositoryList.filter((repository) => {
+        if (tech == "all") {
+          return repository;
+        } else {
+          return repository.language == tech;
+        }
+      });
+    }
+    console.log(repositoryList);
+    console.log(newList);
     setFilteredList(newList);
+  }
+
+  function orderRepositoryList(order: string) {
+    let urlQuery;
+    switch (order) {
+      case "alphabetical":
+        urlQuery = "per_page=100&sort";
+        break;
+      case "date":
+        urlQuery = "per_page=100&sort=pushed";
+        break;
+      default:
+        return;
+    }
+
+    api.get(`/repos?${urlQuery}`).then((response) => {
+      setFilteredList(response.data);
+    });
   }
 
   return (
@@ -93,6 +108,7 @@ function App() {
         searchRepoBytext={searchRepoBytext}
         technologies={technologies}
         searchByTechnology={searchByTechnology}
+        orderRepositoryList={orderRepositoryList}
       />
       <RepositoryList repositoryList={filteredList} />
     </ThemeProvider>
