@@ -18,6 +18,7 @@ export function FilterFields({
 }: FilterFieldsProps) {
   const [textValue, setTextValue] = useState("");
   const [techValue, setTechValue] = useState("");
+  const [repoType, setRepoType] = useState("");
 
   function handleSearchRepoByText(text: string) {
     searchRepoBytext(text, techValue);
@@ -32,6 +33,8 @@ export function FilterFields({
 
   function handleSearchByType(type: string) {
     searchByType(type, techValue, textValue);
+
+    setRepoType(type);
   }
 
   function handleOrderList(order: string) {
