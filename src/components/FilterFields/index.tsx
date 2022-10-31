@@ -1,68 +1,42 @@
-import { useState } from "react";
+import { IFiltersApplied, Queries, Repository } from "../RepositoryContainer";
 import * as S from "./styles";
-
 interface FilterFieldsProps {
-  searchRepoBytext: (tech: string, text: string) => void;
-  searchByTechnology: (tech: string, text: string) => void;
-  orderRepositoryList: (order: string) => void;
-  searchByType: (type: string, tech: string, text: string) => void;
   technologies: string[];
+  handleFilter: (filterFilds: IFiltersApplied) => void;
+  filtersApplied: IFiltersApplied;
+  orderRepositoryList: (order: keyof Queries) => void;
 }
 
 export function FilterFields({
-  searchRepoBytext,
-  searchByTechnology,
-  orderRepositoryList,
-  searchByType,
   technologies,
+  handleFilter,
+  filtersApplied,
+  orderRepositoryList,
 }: FilterFieldsProps) {
-  const [textValue, setTextValue] = useState("");
-  const [techValue, setTechValue] = useState("");
-  const [repoType, setRepoType] = useState("");
-
-  function handleSearchRepoByText(text: string) {
-    searchRepoBytext(text, techValue);
-    setTextValue(text);
-  }
-
-  function handleSearchByTech(tech: string) {
-    searchByTechnology(tech, textValue);
-
-    setTechValue(tech);
-  }
-
-  function handleSearchByType(type: string) {
-    searchByType(type, techValue, textValue);
-
-    setRepoType(type);
-  }
-
-  function handleOrderList(order: string) {
+  function handleOrderList(order: keyof Queries) {
     orderRepositoryList(order);
-
-    setTechValue("");
-    setTextValue("");
   }
   return (
     <S.Wrapper>
       <S.SearchByTextInput
         type="text"
-        value={textValue}
+        value={filtersApplied.name}
         placeholder="Procure por um repositório"
-        onChange={(event) => handleSearchRepoByText(event.target.value)}
+        onChange={(event) =>
+          handleFilter({ ...filtersApplied, name: event.target.value })
+        }
       />
 
       <S.FiltersContainer>
         <span>Filtros:</span>
         <S.SearchBox
-          defaultValue="tecnologies"
+          value={filtersApplied.tech}
           placeholder="Tecnologias"
-          onChange={(event) => handleSearchByTech(event.target.value)}
+          onChange={(event) =>
+            handleFilter({ ...filtersApplied, tech: event.target.value })
+          }
         >
-          <S.SearchOption value="tecnologies" disabled hidden>
-            Tecnologias
-          </S.SearchOption>
-          <S.SearchOption value="all">Todas as tecnologias</S.SearchOption>
+          <S.SearchOption value="all">Tecnologias</S.SearchOption>
           {technologies.map((tech) => {
             return (
               <S.SearchOption key={tech} value={tech}>
@@ -72,22 +46,21 @@ export function FilterFields({
           })}
         </S.SearchBox>
         <S.SearchBox
-          defaultValue="type"
+          value={filtersApplied.type}
           placeholder="Tipo"
-          onChange={(event) => handleSearchByType(event.target.value)}
+          onChange={({ target }) =>
+            handleFilter({ ...filtersApplied, type: target.value as keyof Repository})
+          }
         >
-          <S.SearchOption value="type" disabled hidden>
-            Tipo
-          </S.SearchOption>
-          <S.SearchOption value="all">Todos os tipos</S.SearchOption>
+          <S.SearchOption value="all">Tipo</S.SearchOption>
           <S.SearchOption value="archived">Arquivado</S.SearchOption>
-          <S.SearchOption value="fork">Permite Fork</S.SearchOption>
-          <S.SearchOption value="hasPage">Publicados</S.SearchOption>
+          <S.SearchOption value="allow_forking">Permite Fork</S.SearchOption>
+          <S.SearchOption value="has_pages">Publicados</S.SearchOption>
         </S.SearchBox>
         <S.SearchBox
           defaultValue="order"
           placeholder="Ordenar"
-          onChange={(event) => handleOrderList(event.target.value)}
+          onChange={(event) => handleOrderList(event.target.value as keyof Queries)}
         >
           <S.SearchOption value="order" disabled hidden>
             Ordenar

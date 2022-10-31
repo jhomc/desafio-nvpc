@@ -1,18 +1,50 @@
-import { useEffect, useState } from "react";
-import { Repository } from "../../App";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { api } from "../../services/api";
 import { FilterFields } from "../FilterFields";
 import { RepositoryList } from "../RepositoryList";
 import * as S from "./styles";
+
+export interface Repository {
+  id: number;
+  name: string;
+  description: string;
+  html_url: string;
+  language: string;
+  pushed_at: string;
+  archived: boolean;
+  allow_forking: boolean;
+  has_pages: boolean;
+  all: boolean;
+}
+
+export type Queries = {
+  alphabetical: string;
+  date: string;
+}
+
+export interface IFiltersApplied {
+  name: string;
+  tech: string;
+  type: keyof Repository;
+}
 
 export function RepositoryContainer() {
   const [repositoryList, setRepositoryList] = useState<Repository[]>([]);
   const [filteredList, setFilteredList] =
     useState<Repository[]>(repositoryList);
   const [technologies, setTechnologies] = useState<string[]>([]);
+  const [techValue, setTechValue] = useState("all");
+  const [repoType, setRepoType] = useState<keyof Repository>("all");
+
+  const [filtersApplied, setFiltersApplied] = useState<IFiltersApplied>({
+    name: "",
+    tech: "all",
+    type: "all",
+  });
 
   useEffect(() => {
     api.get("/repos?per_page=100").then((response) => {
+      response.data.all = true;
       setRepositoryList(response.data);
       setFilteredList(response.data);
 
@@ -29,98 +61,55 @@ export function RepositoryContainer() {
     });
   }, []);
 
-  function searchRepoBytext(text: string, tech: string) {
-    let newList: Repository[] = [];
-
-    if (tech != "all" && tech) {
-      newList = repositoryList.filter((repository) => {
-        return (
-          repository.name.toLowerCase().includes(text.toLowerCase()) &&
-          repository.language == tech
-        );
-      });
-    } else {
-      newList = repositoryList.filter((repository) => {
-        return repository.name.toLowerCase().includes(text.toLowerCase());
-      });
-    }
-    setFilteredList(newList);
+  function filterByTech(tech: string, ar: Repository[]) {
+    if (tech == "all") return ar;
+    return ar.filter((repository) => repository.language == tech);
   }
 
-  function searchByTechnology(tech: string, text: string) {
-    let newList: Repository[] = [];
-
-    if (text != "") {
-      if (tech == "all") {
-        newList = repositoryList.filter((repository) => {
-          return repository.name.toLowerCase().includes(text.toLowerCase());
-        });
-      } else {
-        newList = repositoryList.filter((repository) => {
-          return (
-            repository.language == tech &&
-            repository.name.toLowerCase().includes(text.toLowerCase())
-          );
-        });
-      }
-    } else {
-      newList = repositoryList.filter((repository) => {
-        if (tech == "all") {
-          return repository;
-        } else {
-          return repository.language == tech;
-        }
-      });
-    }
-    setFilteredList(newList);
+  function filterByText(text: string, ar: Repository[]) {
+    return ar.filter(({ name }) =>
+      name.toLowerCase().includes(text.toLowerCase())
+    );
   }
 
-  function searchByType(type: string, tech: string, text: string) {
-    let newList: Repository[] = [];
-
-    newList = repositoryList.filter((repository) => {
-      switch (type) {
-        case "all":
-          return repository;
-        case "archived":
-          return repository.archived;
-        case "fork":
-          return repository.allow_forking;
-        case "hasPage":
-          return repository.has_pages;
-        default:
-          return;
-      }
-    });
-
-    setFilteredList(newList);
+  function filterByType(type: keyof Repository, ar: Repository[]) {
+    if (type == "all") return ar;
+    return ar.filter((repository) => repository[type]);
   }
 
-  function orderRepositoryList(order: string) {
-    let urlQuery;
-    switch (order) {
-      case "alphabetical":
-        urlQuery = "per_page=100&sort";
-        break;
-      case "date":
-        urlQuery = "per_page=100&sort=pushed";
-        break;
-      default:
-        return;
-    }
+  function handleFilter(filterValues: IFiltersApplied) {
+    setFiltersApplied({ ...filterValues });
+  }
 
-    api.get(`/repos?${urlQuery}`).then((response) => {
-      setFilteredList(response.data);
-    });
+  useEffect(() => {
+    const fullList = repositoryList;
+    const filteredByText = filterByText(filtersApplied.name, fullList);
+    const filteredByTech = filterByTech(filtersApplied.tech, filteredByText);
+    const filteredByType = filterByType(filtersApplied.type, filteredByTech);
+    setFilteredList(filteredByType!);
+  }, [filtersApplied]);
+
+  
+  async function orderRepositoryList(order: keyof Queries) {
+    const queries = {
+      alphabetical: "per_page=100&sort",
+      date: "per_page=100&sort=pushed",
+    };
+
+    const query = queries[order];
+    if (!query) return;
+
+    const { data } = await api.get(`/repos?${query}`);
+
+    setFilteredList(data);
   }
   return (
     <S.Wrapper>
       <FilterFields
-        searchRepoBytext={searchRepoBytext}
         technologies={technologies}
-        searchByTechnology={searchByTechnology}
+        handleFilter={handleFilter}
+        filtersApplied={filtersApplied}
         orderRepositoryList={orderRepositoryList}
-        searchByType={searchByType}
       />
       <RepositoryList repositoryList={filteredList} />
     </S.Wrapper>
