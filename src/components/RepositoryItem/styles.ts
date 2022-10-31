@@ -6,6 +6,7 @@ export const Wrapper = styled.ul`
     margin-bottom: ${theme.spacings.medium};
     padding-bottom: ${theme.spacings.small};
     border-bottom: 1px solid ${theme.colors.gray};
+    animation: fadeIn 1s;
   `}
 `;
 export const RepositoryTitle = styled.h2`
