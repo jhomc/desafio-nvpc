@@ -87,7 +87,6 @@ export function RepositoryContainer() {
         case "fork":
           return repository.allow_forking;
         case "hasPage":
-          console.log("oi");
           return repository.has_pages;
         default:
           return;
