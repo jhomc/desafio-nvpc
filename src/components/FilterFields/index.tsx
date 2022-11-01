@@ -15,6 +15,7 @@ export function FilterFields({
 }: FilterFieldsProps) {
   function handleOrderList(order: keyof Queries) {
     orderRepositoryList(order);
+    handleFilter({ name: "", tech: "all", type: "all" });
   }
   return (
     <S.Wrapper>
@@ -49,7 +50,10 @@ export function FilterFields({
           value={filtersApplied.type}
           placeholder="Tipo"
           onChange={({ target }) =>
-            handleFilter({ ...filtersApplied, type: target.value as keyof Repository})
+            handleFilter({
+              ...filtersApplied,
+              type: target.value as keyof Repository,
+            })
           }
         >
           <S.SearchOption value="all">Tipo</S.SearchOption>
@@ -60,12 +64,14 @@ export function FilterFields({
         <S.SearchBox
           defaultValue="order"
           placeholder="Ordenar"
-          onChange={(event) => handleOrderList(event.target.value as keyof Queries)}
+          onChange={(event) =>
+            handleOrderList(event.target.value as keyof Queries)
+          }
         >
           <S.SearchOption value="order" disabled hidden>
             Ordenar
           </S.SearchOption>
-          <S.SearchOption value="alphabetical">Alfabetica</S.SearchOption>
+          <S.SearchOption value="alphabetical">Alfabética</S.SearchOption>
           <S.SearchOption value="date">Ultimo commit</S.SearchOption>
         </S.SearchBox>
       </S.FiltersContainer>

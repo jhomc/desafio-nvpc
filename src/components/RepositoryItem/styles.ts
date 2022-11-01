@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import media from "styled-media-query";
 
 export const Wrapper = styled.ul`
   ${({ theme }) => css`
@@ -36,6 +37,10 @@ export const RepositoryDescription = styled.p`
     max-width: 40rem;
     font-size: ${theme.font.sizes.medium};
     font-weight: ${theme.font.normal};
+
+    ${media.lessThan("small")`
+      max-width: 20rem
+    `}
   `}
 `;
 

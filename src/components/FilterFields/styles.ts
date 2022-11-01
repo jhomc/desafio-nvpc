@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import media from "styled-media-query";
 
 export const Wrapper = styled.div`
   ${({ theme }) => css`
@@ -23,6 +24,12 @@ export const FiltersContainer = styled.div`
       font-size: ${theme.font.sizes.small};
       align-self: center;
     }
+
+    ${media.lessThan("small")`
+      span {
+        display: none
+      }
+    `}
   `}
   display: flex;
   width: 100%;
@@ -52,6 +59,10 @@ export const SearchBox = styled.select`
     color: ${theme.colors.white};
     font-family: ${theme.font.family};
     font-weight: ${theme.font.bold};
+
+    ${media.lessThan("small")`
+      font-size: ${theme.font.sizes.small}
+    `}
   `}
 `;
 export const SearchOption = styled.option`

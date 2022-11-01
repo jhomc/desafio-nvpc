@@ -44,6 +44,12 @@ const GlobalStyles = createGlobalStyle<{ theme: Theme }>`
       font-size: 62.5%;
     }
 
+    @media (max-width: 768px) {
+      html {
+        font-size: 50%;
+      }
+    }
+
     body {
       font-family: ${theme.font.family};
       background-color: ${theme.colors.mainBg};
